@@ -209,10 +209,37 @@ def save_state():
     pickle.dump(lst2, open(fn, 'wb'))
 
 
+def repeat_hard_problems(probs, lst):
+    # Problems requiring more than one attempt
+    a = [x['problem'] for x in lst if len(x['attempts']) > 1][:5]
+
+    # The top X problems requiring the most time.
+    b = [x['problem'] for x in sorted(lst, key=lambda x:x['problem_time'], reverse=True)][:5]
+
+    # Like the previous, but only for correct problems
+    # c = [x['problem'] for x in sorted([x for x in lst if x['correct']], key=lambda x:x['problem_time'], reverse=True)][:5]
+
+    # The top X problems requiring the least time.
+    d = [x['problem'] for x in sorted(lst, key=lambda x:x['problem_time'], reverse=False)][:5]
+
+    np = a + b + d
+    np = [x for x in np if x not in probs]
+    # print(f'Reloaded {len(np)} problems')
+    probs = np + probs
+    probs = probs[:n_problems]
+
+    random.shuffle(probs)
+    # print(f'Total {len(probs)} problems')
+
+    return probs
+
+
 if __name__ == '__main__':
     lst2 = restore_state()
 
     probs = gen_problems(n_problems)
+
+    probs = repeat_hard_problems(probs, lst2)
 
     for i, prob in enumerate(probs):
         present_problem(i, prob, lst2)
