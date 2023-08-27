@@ -15,8 +15,6 @@ ntries = 3
 n_problems = 64
 with_replacement = False
 
-dt0 = datetime.now()
-
 
 def clear_screen():
     os.system('clear')
@@ -39,7 +37,7 @@ def gen_problems(n):
     return probs
 
 
-def present_problem(i, prob, lst2):
+def present_problem(i, prob, lst2, dt0):
     clear_screen()
 
     a, op, b, c = prob
@@ -250,8 +248,10 @@ if __name__ == '__main__':
     input()
     readline.clear_history()
 
+    dt0 = datetime.now()
+
     for i, prob in enumerate(probs):
-        present_problem(i, prob, lst2)
+        present_problem(i, prob, lst2, dt0)
         save_state()
 
     final_screen(lst2, dt0, n_problems)
