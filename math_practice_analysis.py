@@ -8,6 +8,8 @@ lst = pickle.load(open('math_practice.pkl', 'rb'))
 # Problems requiring more than one attempt
 [x['problem'] for x in lst if len(x['attempts']) > 1]
 
+# Incorrect problems
+[x for x in lst if not x['correct']]
 
 # The top X problems requiring the most time.
 [(x['problem'], x['problem_time']) for x in sorted(lst, key=lambda x:x['problem_time'], reverse=True)][:5]
