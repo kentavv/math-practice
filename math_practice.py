@@ -182,17 +182,48 @@ def final_screen(lst2, dt0, n):
         print(f'Fastest correct: {min(m):.3f}')
         print(f'Average correct: {sum(m) / len(m):.3f}')
         print(f'Slowest correct: {max(m):.3f}')
-    print()
+        print()
     m = [x['problem_time'] for x in lst2]
     if m:
         print(f'Fastest overall: {min(m):.3f}')
         print(f'Average overall: {sum(m) / len(m):.3f}')
         print(f'Slowest overall: {max(m):.3f}')
-    print()
-    print(get_quote())
+        print()
+
+    # Problems requiring more than one attempt
+    a = [x['problem'] for x in lst2 if len(x['attempts']) > 1][:5]
+
+    # Incorrect problems
+    b = [x['problem'] for x in lst2 if not x['correct']][:5]
+
+    # The top X problems requiring the most time.
+    c = [x['problem'] for x in sorted(lst2, key=lambda x:x['problem_time'], reverse=True)][:5]
+
+    # Like the previous, but only for correct problems
+    # [(x['problem'], x['problem_time']) for x in sorted([x for x in lst if x['correct']], key=lambda x:x['problem_time'], reverse=True)][:5]
+
+    # The top X problems requiring the least time.
+    # [(x['problem'], x['problem_time']) for x in sorted(lst, key=lambda x:x['problem_time'], reverse=False)][:5]
+
+    d = []
+    for x in a + b + c:
+        if x not in d:
+            d += [x]
+
+    if d:
+        print()
+        print('Please review:')
+        for x in d:
+            a, op, b, c = x
+            print(f'{a:3d} {op} {b:3d} = ................. {c:3d}')
+
 
     # for row in lst2:
     #     print(row)
+
+    print()
+    print(get_quote())
+    print()
 
 
 def restore_state():
