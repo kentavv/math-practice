@@ -239,30 +239,31 @@ def save_state():
 
 
 def repeat_hard_problems(probs, lst):
-    # Pull results of last complete try
-    dt = sorted([x['test_start'] for x in lst if x['problem_index'] + 1 == x['problem_count']], reverse=True)[0]
-    lst = [x for x in lst if x['test_start'] == dt]
+    if lst:
+        # Pull results of last complete try
+        dt = sorted([x['test_start'] for x in lst if x['problem_index'] + 1 == x['problem_count']], reverse=True)[0]
+        lst = [x for x in lst if x['test_start'] == dt]
 
-    # Problems requiring more than one attempt
-    a = [x['problem'] for x in lst if len(x['attempts']) > 1][:5]
+        # Problems requiring more than one attempt
+        a = [x['problem'] for x in lst if len(x['attempts']) > 1][:5]
 
-    # The top X problems requiring the most time.
-    b = [x['problem'] for x in sorted(lst, key=lambda x:x['problem_time'], reverse=True)][:5]
+        # The top X problems requiring the most time.
+        b = [x['problem'] for x in sorted(lst, key=lambda x:x['problem_time'], reverse=True)][:5]
 
-    # Like the previous, but only for correct problems
-    # c = [x['problem'] for x in sorted([x for x in lst if x['correct']], key=lambda x:x['problem_time'], reverse=True)][:5]
+        # Like the previous, but only for correct problems
+        # c = [x['problem'] for x in sorted([x for x in lst if x['correct']], key=lambda x:x['problem_time'], reverse=True)][:5]
 
-    # The top X problems requiring the least time.
-    d = [x['problem'] for x in sorted(lst, key=lambda x:x['problem_time'], reverse=False)][:5]
+        # The top X problems requiring the least time.
+        d = [x['problem'] for x in sorted(lst, key=lambda x:x['problem_time'], reverse=False)][:5]
 
-    np = []
-    for x in a + b + d:
-        if x not in np and x not in probs:
-            np += [x]
+        np = []
+        for x in a + b + d:
+            if x not in np and x not in probs:
+                np += [x]
 
-    print(f'Restored {len(np)} problems')
-    probs = np + probs
-    probs = probs[:n_problems]
+        print(f'Restored {len(np)} problems')
+        probs = np + probs
+        probs = probs[:n_problems]
 
     random.shuffle(probs)
     # print(f'Total {len(probs)} problems')
