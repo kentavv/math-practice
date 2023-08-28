@@ -213,9 +213,9 @@ def final_screen(lst2, dt0, n):
     if d:
         print()
         print('Please review:')
-        for x in d:
+        for x in sorted(d, key=lambda x: (x[-1], x[0])):
             a, op, b, c = x
-            print(f'{a:3d} {op} {b:3d} = ................. {c:3d}')
+            print(f'{a:3d} {op} {b:3d} = {c:3d}')
 
 
     # for row in lst2:
@@ -239,6 +239,10 @@ def save_state():
 
 
 def repeat_hard_problems(probs, lst):
+    # Pull results of last complete try
+    dt = sorted([x['test_start'] for x in lst if x['problem_index'] + 1 == x['problem_count']], reverse=True)[0]
+    lst = [x for x in lst if x['test_start'] == dt]
+
     # Problems requiring more than one attempt
     a = [x['problem'] for x in lst if len(x['attempts']) > 1][:5]
 
@@ -251,8 +255,11 @@ def repeat_hard_problems(probs, lst):
     # The top X problems requiring the least time.
     d = [x['problem'] for x in sorted(lst, key=lambda x:x['problem_time'], reverse=False)][:5]
 
-    np = a + b + d
-    np = [x for x in np if x not in probs]
+    np = []
+    for x in a + b + d:
+        if x not in np and x not in probs:
+            np += [x]
+
     print(f'Restored {len(np)} problems')
     probs = np + probs
     probs = probs[:n_problems]
